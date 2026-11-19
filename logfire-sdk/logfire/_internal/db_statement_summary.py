@@ -135,9 +135,15 @@ def outside_parentheses(s: str) -> str:
     result: list[str] = []
     depth = 0
     quote: str | None = None
+    # A backslash escapes the next character inside single-quoted SQL literals.
+    escaped = False
     for char in s:
-        if quote:
-            if char == quote:
+        if escaped:
+            escaped = False
+        elif quote:
+            if char == '\\' and quote == "'":
+                escaped = True
+            elif char == quote:
                 quote = None
         elif char in '\'"`':
             quote = char

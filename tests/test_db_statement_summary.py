@@ -200,3 +200,9 @@ def test_ctes_with_parentheses_in_literals():
     q = "WITH foo AS (SELECT * FROM t WHERE name LIKE '%(%'), bar AS (SELECT ')' AS paren FROM foo) SELECT * FROM bar"
     # insert_assert(message_from_db_statement(attrs(q), None, 'SELECT'))
     assert message_from_db_statement(attrs(q), None, 'SELECT') == 'WITH …[2 CTEs] SELECT * FROM bar'
+
+
+def test_ctes_with_escaped_quotes_in_literals():
+    q = r"WITH foo AS (SELECT 'it\'s' AS x FROM t), bar AS (SELECT 1) SELECT * FROM bar WHERE aaaaaaaaaaaa=1"
+    # insert_assert(message_from_db_statement(attrs(q), None, 'SELECT'))
+    assert message_from_db_statement(attrs(q), None, 'SELECT') == 'WITH …[2 CTEs] SELECT * FROM bar WHERE …'
